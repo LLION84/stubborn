@@ -1,20 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
+{% block title %}Boutique - Stubborn{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="boutique">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        {# Le filtre à gauche #}
+        <aside class="filtre">
+            <p class="filtre-titre">Fourchette de prix</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/blais/Documents/DEV/formation/Devoir c.e.f/stubborn/src/Controller/ProductController.php</code></li>
-        <li>Your template at <code>C:/Users/blais/Documents/DEV/formation/Devoir c.e.f/stubborn/templates/product/index.html.twig</code></li>
-    </ul>
-</div>
+            <a href="{{ path('app_products') }}" class="{{ selected is empty ? 'actif' }}">Tous</a>
+
+            {% for range in ranges %}
+                <a href="{{ path('app_products', {range: range}) }}" class="{{ selected == range ? 'actif' }}">
+                    {{ range|replace({'-': ' à '}) }} €
+                </a>
+            {% endfor %}
+        </aside>
+
+        {# Les sweats à droite #}
+        <section class="grille">
+            {% for product in products %}
+                <article class="carte">
+                    <img src="{{ asset('images/' ~ product.image) }}" alt="{{ product.name }}">
+                    <div class="carte-infos">
+                        <div>
+                            <p class="carte-nom">{{ product.name }}</p>
+                            <p class="carte-prix">{{ product.price|number_format(2, ',', ' ') }} €</p>
+                        </div>
+                        <a href="{{ path('app_product', {id: product.id}) }}" class="bouton">Voir</a>
+                    </div>
+                </article>
+            {% else %}
+                <p>Aucun sweat dans cette fourchette de prix.</p>
+            {% endfor %}
+        </section>
+
+    </div>
 {% endblock %}

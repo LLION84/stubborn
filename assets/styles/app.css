@@ -255,3 +255,50 @@ select:focus {
     padding: 24px 20px;
   }
 }
+
+/* ===== Boutique : filtre à gauche, sweats à droite ===== */
+.boutique {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.filtre {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #ececf0;
+  border-radius: 16px;
+  padding: 20px;
+}
+.filtre-titre {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.filtre a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #424245;
+}
+.filtre a:hover {
+  background: #f5f5f7;
+}
+.filtre a.actif {
+  background: #1d1d1f;
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .boutique {
+    grid-template-columns: 1fr;
+  }
+  .filtre {
+    position: static;
+  }
+}
