@@ -1,20 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Panier - Stubborn{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Votre panier</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {% if items is empty %}
+        {# Panier vide #}
+        <p>Votre panier est vide.</p>
+        <a href="{{ path('app_products') }}">Continuer mes achats</a>
+    {% else %}
+        <div class="panier">
+            {% for item in items %}
+                <article class="ligne">
+                    <img src="{{ asset('images/' ~ item.product.image) }}" alt="{{ item.product.name }}">
+                    <p class="ligne-nom">{{ item.product.name }}</p>
+                    <p>{{ item.product.price|number_format(2, ',', ' ') }} €</p>
+                    <p>Taille {{ item.size }}{% if item.quantity > 1 %} × {{ item.quantity }}{% endif %}</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/blais/Documents/DEV/formation/Devoir c.e.f/stubborn/src/Controller/CartController.php</code></li>
-        <li>Your template at <code>C:/Users/blais/Documents/DEV/formation/Devoir c.e.f/stubborn/templates/cart/index.html.twig</code></li>
-    </ul>
-</div>
+                    {# Un petit formulaire par ligne pour la retirer #}
+                    <form method="post" action="{{ path('app_cart_remove', {key: item.key}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('remove-' ~ item.key) }}">
+                        <button type="submit" class="bouton-secondaire">Retirer du panier</button>
+                    </form>
+                </article>
+            {% endfor %}
+        </div>
+
+        <div class="panier-actions">
+            <p class="total">Total : {{ total|number_format(2, ',', ' ') }} €</p>
+            {# Ce bouton sera branché sur Stripe à l'étape 9 #}
+            <a href="#" class="bouton bouton-commande">Finaliser ma commande</a>
+            <a href="{{ path('app_products') }}" class="bouton bouton-continuer">Continuer mes achats</a>
+        </div>
+    {% endif %}
 {% endblock %}

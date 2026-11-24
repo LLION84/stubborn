@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} - Stubborn{% endblock %}
+
+{% block body %}
+    <article class="fiche">
+        <img src="{{ asset('images/' ~ product.image) }}" alt="{{ product.name }}">
+
+        <div class="fiche-infos">
+            <h1>{{ product.name }}</h1>
+            <p class="fiche-prix">{{ product.price|number_format(2, ',', ' ') }} €</p>
+
+            {# Le formulaire envoie la taille choisie à la route d'ajout au panier #}
+            <form method="post" action="{{ path('app_cart_add', {id: product.id}) }}">
+                <label for="size">Taille</label>
+                <select name="size" id="size" required>
+                    {% for size in ['XS', 'S', 'M', 'L', 'XL'] %}
+                        <option value="{{ size }}">{{ size }}</option>
+                    {% endfor %}
+                </select>
+
+                {# Jeton anti-CSRF : prouve que le formulaire vient bien de notre site #}
+                <input type="hidden" name="_token" value="{{ csrf_token('add-to-cart') }}">
+
+                <button type="submit">Ajouter au panier</button>
+            </form>
+        </div>
+    </article>
+{% endblock %}
