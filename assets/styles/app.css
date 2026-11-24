@@ -1,3 +1,257 @@
+/* ===== Base ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    background-color: skyblue;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  color: #1d1d1f;
+  background: #fafafa;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ===== En-tête ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 48px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5ea;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+}
+.logo img {
+  height: 48px;
+  width: auto;
+}
+.slogan {
+  font-size: 13px;
+  color: #6e6e73;
+  margin-top: 4px;
+}
+
+.menu {
+  display: flex;
+  gap: 28px;
+  font-size: 15px;
+}
+.menu a {
+  color: #424245;
+}
+.menu a:hover {
+  color: #1d1d1f;
+}
+
+/* Le lien de la page actuelle : gras + souligné (exigé par le PDF) */
+.menu a.active {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  color: #1d1d1f;
+}
+
+/* ===== Contenu ===== */
+.contenu {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.flash {
+  background: #eaf6ee;
+  color: #1e6b3a;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.presentation {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 48px;
+}
+.presentation h1 {
+  font-size: 36px;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.presentation p {
+  color: #6e6e73;
+  font-size: 17px;
+}
+
+/* ===== Grille des sweats ===== */
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+.carte {
+  background: #fff;
+  border: 1px solid #ececf0;
+  border-radius: 16px;
+  overflow: hidden;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.carte:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.carte img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  padding: 16px;
+}
+
+.carte-infos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px 20px;
+}
+.carte-nom {
+  font-weight: 600;
+}
+.carte-prix {
+  color: #6e6e73;
+  font-size: 14px;
+}
+
+/* ===== Boutons ===== */
+.bouton,
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 999px;
+  background: #1d1d1f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.bouton:hover,
+button:hover {
+  background: #3a3a3c;
+}
+
+/* ===== Formulaires ===== */
+label {
+  display: block;
+  font-size: 14px;
+  color: #424245;
+  margin: 16px 0 6px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d2d2d7;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #fff;
+}
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #1d1d1f;
+}
+
+/* Les messages d'erreur sous les champs */
+.contenu ul {
+  list-style: none;
+  color: #c0392b;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* Pages connexion et inscription : formulaire centré */
+.contenu > h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.contenu > form {
+  max-width: 380px;
+  margin: 0 auto;
+}
+.contenu > form h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.contenu > form button {
+  width: 100%;
+  margin-top: 28px;
+}
+.contenu > p {
+  text-align: center;
+  margin-top: 32px;
+  color: #6e6e73;
+  font-size: 14px;
+}
+.contenu > p + a {
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ===== Pied de page ===== */
+.footer {
+  background: #fff;
+  border-top: 1px solid #e5e5ea;
+  padding: 28px 48px;
+  font-size: 14px;
+  color: #6e6e73;
+}
+.footer strong {
+  color: #1d1d1f;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 700px) {
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+  }
+  .footer {
+    padding: 24px 20px;
+  }
 }

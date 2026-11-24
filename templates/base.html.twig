@@ -1,24 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Stubborn{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
-
-        {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphp_hot_reload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {# Le nom de la page actuelle, pour mettre son lien en gras #}
+        {% set route = app.request.attributes.get('_route') %}
+
+        <header class="header">
+            <a href="{{ path('app_home') }}" class="logo">
+                <img src="{{ asset('images/Logo.png') }}" alt="Stubborn">
+                <span class="slogan">Don't compromise on your look</span>
+            </a>
+
+            <nav class="menu">
+                <a href="{{ path('app_home') }}" class="{{ route == 'app_home' ? 'active' }}">Accueil</a>
+
+                {% if app.user %}
+                    {# Menu CONNECTÉ #}
+                    <a href="{{ path('app_products') }}" class="{{ route == 'app_products' ? 'active' }}">Boutique</a>
+                    <a href="{{ path('app_cart') }}" class="{{ route == 'app_cart' ? 'active' }}">Panier</a>
+                    <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                {% else %}
+                    {# Menu NON CONNECTÉ #}
+                    <a href="{{ path('app_register') }}" class="{{ route == 'app_register' ? 'active' }}">S'inscrire</a>
+                    <a href="{{ path('app_login') }}" class="{{ route == 'app_login' ? 'active' }}">Se connecter</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <main class="contenu">
+            {% for message in app.flashes('success') %}
+                <p class="flash">{{ message }}</p>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            <p><strong>Stubborn</strong> — Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
+            <p>Contact : stubborn@blabla.com</p>
+        </footer>
     </body>
 </html>
