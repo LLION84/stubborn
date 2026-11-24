@@ -2,12 +2,15 @@
 
 namespace App\DataFixtures;
 
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Entity\User;
 use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
+    public function __construct(private UserPasswordHasherInterface $hasher) {}
     public function load(ObjectManager $manager): void
     {
         $sweats = [
@@ -36,6 +39,13 @@ class AppFixtures extends Fixture
             $product->setStockXl(5);
             $manager->persist($product);
         }
+        $admin = new User();
+        $admin->setEmail('admin@stubborn.fr');
+        $admin->setName('Admin');
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setIsVerified(true);
+        $admin->setPassword($this->hasher->hashPassword($admin, 'admin123'));
+        $manager->persist($admin);
 
         $manager->flush();
     }
