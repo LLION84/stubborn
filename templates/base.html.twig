@@ -36,8 +36,11 @@
         </header>
 
         <main class="contenu">
-            {% for message in app.flashes('success') %}
-                <p class="flash">{{ message }}</p>
+            {# Tous les messages, quel que soit leur type (success, warning...) #}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <p class="flash flash-{{ type }}">{{ message }}</p>
+                {% endfor %}
             {% endfor %}
 
             {% block body %}{% endblock %}

@@ -30,7 +30,11 @@
         <div class="panier-actions">
             <p class="total">Total : {{ total|number_format(2, ',', ' ') }} €</p>
             {# Ce bouton sera branché sur Stripe à l'étape 9 #}
-            <a href="#" class="bouton bouton-commande">Finaliser ma commande</a>
+            {# Envoie vers Stripe #}
+            <form method="post" action="{{ path('app_checkout') }}" data-turbo="false">
+                <input type="hidden" name="_token" value="{{ csrf_token('checkout') }}">
+                <button type="submit" class="bouton bouton-commande">Finaliser ma commande</button>
+            </form>
             <a href="{{ path('app_products') }}" class="bouton bouton-continuer">Continuer mes achats</a>
         </div>
     {% endif %}

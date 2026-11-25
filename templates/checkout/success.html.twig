@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande confirmée - Stubborn{% endblock %}
+
+{% block body %}
+    <section class="confirmation">
+        <h1>Merci pour votre commande !</h1>
+                <p>Votre paiement a bien été accepté.</p>
+
+        {# L'admin n'a pas d'adresse : on n'affiche la ligne que si elle existe #}
+        {% if app.user.deliveryAddress %}
+            <p>Vous recevrez votre colis à l'adresse :</p>
+            <p class="adresse">{{ app.user.deliveryAddress }}</p>
+        {% endif %}
+
+        <a href="{{ path('app_products') }}" class="bouton">Continuer mes achats</a>
+    </section>
+{% endblock %}

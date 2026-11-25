@@ -423,3 +423,8 @@ select:focus {
     align-items: stretch;
   }
 }
+/* ===== Messages d'avertissement ===== */
+.flash-warning {
+  background: #fff4e5;
+  color: #8a5300;
+}
