@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Stripe\Stripe;
 use Stripe\StripeClient;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -16,6 +17,13 @@ class StripeService
         // Symfony va lire la clé secrète dans .env.local et la donner ici
         #[Autowire('%env(STRIPE_SECRET_KEY)%')] string $secretKey,
     ) {
+        // Si PHP a sa propre liste de certificats (php.ini → curl.cainfo),
+        // Stripe l'utilise aussi. Nécessaire quand un antivirus inspecte le HTTPS.
+        $caBundle = ini_get('curl.cainfo');
+        if ($caBundle) {
+            Stripe::setCABundlePath($caBundle);
+        }
+
         $this->stripe = new StripeClient($secretKey);
     }
 
@@ -27,9 +35,26 @@ class StripeService
      */
     public function createCheckoutSession(array $items, string $successUrl, string $cancelUrl): string
     {
+        $session = $this->stripe->checkout->sessions->create([
+            'mode' => 'payment',
+            'line_items' => $this->buildLineItems($items),
+            'success_url' => $successUrl,
+            'cancel_url' => $cancelUrl,
+        ]);
+
+        return $session->url;
+    }
+
+    /**
+     * Transforme les lignes du panier au format attendu par Stripe.
+     *
+     * @param array $items Les lignes du panier
+     * @return array Les lignes au format Stripe
+     */
+    public function buildLineItems(array $items): array
+    {
         $lineItems = [];
 
-        // Transforme chaque ligne du panier au format attendu par Stripe
         foreach ($items as $item) {
             $lineItems[] = [
                 'price_data' => [
@@ -44,15 +69,7 @@ class StripeService
             ];
         }
 
-        // Demande à Stripe de créer la page de paiement
-        $session = $this->stripe->checkout->sessions->create([
-            'mode' => 'payment',
-            'line_items' => $lineItems,
-            'success_url' => $successUrl,   // où revenir si le paiement réussit
-            'cancel_url' => $cancelUrl,     // où revenir si le client annule
-        ]);
-
-        return $session->url;
+        return $lineItems;
     }
 
     /**
