@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Back-office - Stubborn{% endblock %}
+
+{# Les champs affichés en ligne, dans l'ordre du wireframe #}
+{% set champs = ['name', 'price', 'stockXs', 'stockS', 'stockM', 'stockL', 'stockXl'] %}
+
+{% block body %}
+    <h1>Back-office</h1>
+
+    {# ===== AJOUTER un sweat ===== #}
+    <section class="admin-ligne admin-ajout">
+        <div class="admin-image admin-image-vide">+</div>
+
+        {{ form_start(addForm, {attr: {class: 'admin-form', id: addForm.vars.id}}) }}
+            <div class="admin-champs">
+                {% for champ in champs %}
+                    {{ form_row(addForm[champ]) }}
+                {% endfor %}
+            </div>
+            <div class="admin-bas">
+                {{ form_row(addForm.imageFile) }}
+                {{ form_row(addForm.featured) }}
+            </div>
+        {{ form_end(addForm) }}
+
+        <div class="admin-actions">
+            <button type="submit" form="{{ addForm.vars.id }}">Ajouter</button>
+        </div>
+    </section>
+
+    {# ===== Les sweats EXISTANTS ===== #}
+    {% for product in products %}
+        {% set form = editForms[product.id] %}
+
+        <section class="admin-ligne">
+            <img class="admin-image" src="{{ asset('images/' ~ product.image) }}" alt="{{ product.name }}">
+
+            {{ form_start(form, {attr: {class: 'admin-form', id: form.vars.id}}) }}
+                <div class="admin-champs">
+                    {% for champ in champs %}
+                        {{ form_row(form[champ]) }}
+                    {% endfor %}
+                </div>
+                <div class="admin-bas">
+                    {{ form_row(form.imageFile, {label: 'Nouvelle image'}) }}
+                    {{ form_row(form.featured) }}
+                </div>
+            {{ form_end(form) }}
+
+            <div class="admin-actions">
+                <form method="post" action="{{ path('app_admin_delete', {id: product.id}) }}"
+                      onsubmit="return confirm('Supprimer {{ product.name }} ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-' ~ product.id) }}">
+                    <button type="submit" class="bouton-secondaire">Supprimer</button>
+                </form>
+
+                <button type="submit" form="{{ form.vars.id }}">Modifier</button>
+            </div>
+        </section>
+    {% endfor %}
+{% endblock %}

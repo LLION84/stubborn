@@ -13,22 +13,40 @@
         {# Le nom de la page actuelle, pour mettre son lien en gras #}
         {% set route = app.request.attributes.get('_route') %}
 
+        {# Est-on dans le back-office ? (toutes ses routes commencent par app_admin) #}
+        {% set dansAdmin = route starts with 'app_admin' %}
+
         <header class="header">
-            <a href="{{ path('app_home') }}" class="logo">
-                <img src="{{ asset('images/Logo.png') }}" alt="Stubborn">
-                <span class="slogan">Don't compromise on your look</span>
-            </a>
+            <div class="header-gauche">
+                <a href="{{ path('app_home') }}" class="logo">
+                    <img src="{{ asset('images/Logo.png') }}" alt="Stubborn">
+                    <span class="slogan">Don't compromise on your look</span>
+                </a>
+
+                {% if dansAdmin %}
+                    <span class="badge-admin">Back-Office</span>
+                {% endif %}
+            </div>
 
             <nav class="menu">
-                <a href="{{ path('app_home') }}" class="{{ route == 'app_home' ? 'active' }}">Accueil</a>
+                {% if dansAdmin %}
+                    {# Menu du BACK-OFFICE (wireframe) #}
+                    <a href="{{ path('app_products') }}">Boutique</a>
+                    <a href="{{ path('app_logout') }}">Se déconnecter</a>
 
-                {% if app.user %}
+                {% elseif app.user %}
                     {# Menu CONNECTÉ #}
+                    <a href="{{ path('app_home') }}" class="{{ route == 'app_home' ? 'active' }}">Accueil</a>
                     <a href="{{ path('app_products') }}" class="{{ route == 'app_products' ? 'active' }}">Boutique</a>
                     <a href="{{ path('app_cart') }}" class="{{ route == 'app_cart' ? 'active' }}">Panier</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin') }}">Back-office</a>
+                    {% endif %}
                     <a href="{{ path('app_logout') }}">Se déconnecter</a>
+
                 {% else %}
                     {# Menu NON CONNECTÉ #}
+                    <a href="{{ path('app_home') }}" class="{{ route == 'app_home' ? 'active' }}">Accueil</a>
                     <a href="{{ path('app_register') }}" class="{{ route == 'app_register' ? 'active' }}">S'inscrire</a>
                     <a href="{{ path('app_login') }}" class="{{ route == 'app_login' ? 'active' }}">Se connecter</a>
                 {% endif %}
